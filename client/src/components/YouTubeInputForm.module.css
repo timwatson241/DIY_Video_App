@@ -1,0 +1,20 @@
+/* src/components/YouTubeInputForm.module.css */
+.inputFade {
+    position: relative;
+  }
+  
+  .inputFade::after {
+    content: '';
+    position: absolute;
+    top: 10%;
+    right: 3px;
+    bottom: 10%;
+    width: 98%;
+    background-image: linear-gradient(
+      to left,
+      rgb(255, 255, 255),
+      rgba(255, 255, 255,0) 60%
+    );
+    pointer-events: none;
+  }
+  
