@@ -16,15 +16,18 @@ import axios from "axios";
 interface YouTubeInputFormProps {
   onVideoSubmit: (videoUrl: string) => void;
   onTranscriptionReceived: (transcription: string) => void;
+  setLoading: (loading: boolean) => void;
 }
 
 const YouTubeInputForm: React.FC<YouTubeInputFormProps> = ({
   onVideoSubmit,
   onTranscriptionReceived,
+  setLoading,
 }) => {
   const [videoUrl, setVideoUrl] = useState("");
 
   const processLink = async (url: string) => {
+    setLoading(true);
     try {
       const response = await axios.post("http://localhost:3000/process-link", {
         link: url,
@@ -33,6 +36,8 @@ const YouTubeInputForm: React.FC<YouTubeInputFormProps> = ({
       onTranscriptionReceived(response.data);
     } catch (error) {
       console.error("Error processing link:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -48,7 +53,7 @@ const YouTubeInputForm: React.FC<YouTubeInputFormProps> = ({
   return (
     <Box width="50%" textAlign="center" maxWidth="400px">
       <Heading fontSize="3xl" marginBottom={2}>
-        DIY Magic
+        DIY Magic https://www.youtube.com/watch?v=gddNRAxnJhE
       </Heading>
       <form onSubmit={handleSubmit}>
         <FormControl id="youtube-url">
