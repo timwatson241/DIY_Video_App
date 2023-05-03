@@ -55,23 +55,30 @@ function App() {
       )}
 
       {videoUrl && (
-        <Box mt={8} width="100%" textAlign="center">
-          <Flex flexDirection="column" alignItems="center">
-            <Box position="relative" height="720px" width="1280px">
-              {loadingVideo && <SkeletonLoader height="100%" width="100%" />}
-              <ReactPlayer
-                url={videoUrl}
-                controls
-                height="100%"
-                width="100%"
-                onReady={() => {
-                  setLoadingVideo(false);
-                }}
-              />
-            </Box>
+        <>
+          <Flex
+            flexDirection="column"
+            alignItems="center"
+            mt={8}
+            height="720px"
+            width="1280px"
+            position="relative"
+          >
+            {loadingVideo && <SkeletonLoader height="100%" width="100%" />}
+            <ReactPlayer
+              url={videoUrl}
+              controls
+              height="100%"
+              width="100%"
+              position="relative"
+              onReady={() => {
+                setLoadingVideo(false);
+              }}
+            />
           </Flex>
 
           <Text textAlign="center">{videoUrl}</Text>
+
           {isTranscriptLoading && (
             <Flex justifyContent="center" alignItems="center" mt={8}>
               <Spinner size="xl" />
@@ -82,7 +89,7 @@ function App() {
               <Text>{transcription}</Text>
             </Flex>
           )}
-        </Box>
+        </>
       )}
     </Flex>
   );

@@ -13,6 +13,8 @@ const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({ height, width }) => {
       position={"absolute"}
       height={height}
       width={width}
+      top="0"
+      left="0"
     >
       <Skeleton height="100%" width="100%" />
       <Flex
