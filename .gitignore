@@ -12,6 +12,8 @@ dist
 dist-ssr
 *.local
 server/.env
+server/automatic-rite-385612-cab65b0d4682.json
+server/gcloudkey.json
 
 # Editor directories and files
 .vscode/*
