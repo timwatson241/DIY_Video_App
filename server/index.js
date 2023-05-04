@@ -1,55 +1,59 @@
-const express = require('express');
+// index.js
+const express = require("express");
 const app = express();
-const port = 3000;
-require('dotenv').config();
-const { Configuration, OpenAIApi } = require("openai");
-const fs = require('fs');
-const ytdl = require('ytdl-core');
-const summary = require('./summary');
-const cors = require('cors');
+const port = 3004;
 
-//2. Initiate OpenAI Client
-const main = (link, callback) => {
-    const configuration = new Configuration({
-      apiKey: process.env.OPENAI_API_KEY,
-    });
-    const openai = new OpenAIApi(configuration);
-    // 3. Download the youtube video
-    const videoStream = fs.createWriteStream('video.mp4');
-    ytdl(link, { quality: 'lowest'}).pipe(videoStream);
+const cors = require("cors");
 
-    const transcribeStream = fs.createWriteStream('transcribe.txt');
+const downloadYouTubeAudio = require("./utils/downloadAudio");
+const googleTranscribe = require("./utils/googleTranscribe");
+const openAITranscribe = require("./utils/openAITranscribe");
+const generateInstructions = require("./utils/generateInstructions");
 
-    //4. When the download done, transcribe it
-    videoStream.on("finish", async () => {
-        const transcribe = await openai.createTranscription(
-          fs.createReadStream("./video.mp4"),
-          "whisper-1"
-        );
-        transcribeStream.write(transcribe.data.text);
-        summary.main(transcribe.data.text);
-    
-        // Call the callback function with the transcribed text
-        callback(transcribe.data.text);
-      });
-    };
-
+require("dotenv").config();
 app.use(cors());
 app.use(express.json()); // Add this line to parse JSON request body
 
-app.post("/process-link", (req, res) => {
-  const link = req.body.link;
+const audioFilePath = "./resources/audio.mp3";
 
-main(link, (transcription) => {
-    res.send(transcription);
-  });
+app.post("/process-link", async (req, res) => {
+  const link = req.body.link;
+  console.log("link received:", link);
+
+  await downloadYouTubeAudio(link);
+
+  try {
+    // Run both transcriptions simultaneously and wait for their results
+    const [googleTranscriptionData, openaiTranscriptionData] =
+      await Promise.all([googleTranscribe(link), openAITranscribe(link)]);
+
+    console.log("Google transcription data:", googleTranscriptionData);
+    console.log("OpenAI transcription data:", openaiTranscriptionData);
+
+    const generatedText = await generateInstructions();
+    //res.send(generatedText);
+  } catch (err) {
+    console.error("Error transcribing audio or video:", err);
+    res
+      .status(500)
+      .send("An error occurred while transcribing audio or video.");
+  }
 });
 
-
-app.get('/', (req, res) => {
-  res.send('Hello Worlds!');
+app.get("/", (req, res) => {
+  res.send("Hello Worlds!");
 });
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
 });
+
+/*(async () => {
+    try {
+      const openaiTranscriptionData = await openAITranscribe(audioFilePath);
+      console.log(openaiTranscriptionData);
+    } catch (err) {
+      console.error('Error transcribing video with OpenAI:', err);
+    }
+  })();
+*/

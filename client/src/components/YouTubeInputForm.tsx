@@ -29,7 +29,7 @@ const YouTubeInputForm: React.FC<YouTubeInputFormProps> = ({
   const processLink = async (url: string) => {
     setLoading(true);
     try {
-      const response = await axios.post("http://localhost:3000/process-link", {
+      const response = await axios.post("http://localhost:3004/process-link", {
         link: url,
       });
       console.log("Response from server:", response.data);
@@ -53,7 +53,7 @@ const YouTubeInputForm: React.FC<YouTubeInputFormProps> = ({
   return (
     <Box width="50%" textAlign="center" maxWidth="400px">
       <Heading fontSize="3xl" marginBottom={2}>
-        DIY Magic https://www.youtube.com/watch?v=gddNRAxnJhE
+        DIY Magic
       </Heading>
       <form onSubmit={handleSubmit}>
         <FormControl id="youtube-url">

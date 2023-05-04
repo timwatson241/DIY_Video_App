@@ -39,7 +39,7 @@ function App() {
       flexDirection="column"
       alignItems="center"
       minHeight="100vh"
-      paddingTop={60}
+      paddingTop={40}
       width="100%"
     >
       {showForm ? (
@@ -78,6 +78,9 @@ function App() {
           </Flex>
 
           <Text textAlign="center">{videoUrl}</Text>
+          <Heading mt={8} textAlign="center">
+            Summary
+          </Heading>
 
           {isTranscriptLoading && (
             <Flex justifyContent="center" alignItems="center" mt={8}>
