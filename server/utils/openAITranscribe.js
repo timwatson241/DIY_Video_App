@@ -1,5 +1,3 @@
-// openaiTranscribe.js
-
 const { Configuration, OpenAIApi } = require("openai");
 const fs = require("fs");
 const ytdl = require("ytdl-core");
@@ -10,24 +8,38 @@ const main = async (link) => {
   });
   const openai = new OpenAIApi(configuration);
 
-  // Download the youtube video
-  const videoStream = fs.createWriteStream("video.mp4");
-  ytdl(link, { quality: "lowest" }).pipe(videoStream);
+  const audioFilePath = "./resources/audio.mp3";
 
-  const transcribeStream = fs.createWriteStream("transcribe.txt");
+  try {
+    const videoInfo = await ytdl.getInfo(link);
+    const videoTitle = videoInfo.videoDetails.title;
 
-  return new Promise((resolve) => {
-    videoStream.on("finish", async () => {
-      const transcribe = await openai.createTranscription(
-        fs.createReadStream("./video.mp4"),
-        "whisper-1"
-      );
-      transcribeStream.write(transcribe.data.text);
+    const transcribe = await openai.createTranscription(
+      fs.createReadStream(audioFilePath),
+      "whisper-1"
+    );
 
-      // Resolve the promise with the transcribed text
-      resolve(transcribe.data.text);
-    });
-  });
+    console.log("OpenAI transcription successful");
+
+    // Create JSON object with the desired structure
+    const openaiTranscriptionData = {
+      source: "OpenAI",
+      videoTitle: videoTitle,
+      videoLink: link,
+      transcript: transcribe.data.text,
+    };
+
+    fs.writeFileSync(
+      "./transcriptions/openai-transcription.json",
+      JSON.stringify(openaiTranscriptionData)
+    );
+
+    // Return the transcribed text
+    return transcribe.data.text;
+  } catch (error) {
+    console.error("Error during OpenAI transcription:", error);
+    throw error;
+  }
 };
 
 module.exports = main;

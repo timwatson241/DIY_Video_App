@@ -78,6 +78,4 @@ const googleTranscribe = async (link) => {
   return googleTranscriptionData;
 };
 
-googleTranscribe("https://www.youtube.com/watch?v=qLO_HO0kEjs");
-
 module.exports = googleTranscribe;

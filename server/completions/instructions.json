@@ -2,28 +2,33 @@
   "steps": [
     {
       "order": 1,
-      "timestamp": "",
+      "timestamp": "0:00",
       "instruction": "Recognize that regret is the biggest poison in life"
     },
     {
       "order": 2,
       "timestamp": "0:07",
-      "instruction": "Understand that there are many dreams and aspirations that people have but it is never the right time to pursue them"
+      "instruction": "Understand that it's never the right time to do something"
     },
     {
       "order": 3,
-      "timestamp": "0:30",
-      "instruction": "Realize that life is short and you only have one shot at it"
+      "timestamp": "0:17",
+      "instruction": "Realize that you only have one shot at life"
     },
     {
       "order": 4,
-      "timestamp": "0:45",
-      "instruction": "Don't settle for being the 80% version of yourself"
+      "timestamp": "0:30",
+      "instruction": "Don't settle for being an 80% version of yourself"
     },
     {
       "order": 5,
-      "timestamp": "1:00",
-      "instruction": "Love life and don't miss out on the opportunities it presents"
+      "timestamp": "0:37",
+      "instruction": "Don't look back with regret when you're older"
+    },
+    {
+      "order": 6,
+      "timestamp": "0:45",
+      "instruction": "Do the things you want to do and love life"
     }
   ]
 }

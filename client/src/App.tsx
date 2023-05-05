@@ -7,19 +7,34 @@ import {
   Heading,
   Skeleton,
   Text,
+  Tabs,
+  TabList,
+  Tab,
+  TabPanels,
+  TabPanel,
 } from "@chakra-ui/react";
+
 import { useState } from "react";
 import YouTubeInputForm from "./components/YouTubeInputForm";
 import SkeletonLoader from "./components/skeletonLoader";
 import ReactPlayer from "react-player";
 import { Spinner } from "@chakra-ui/react";
+import { InstructionStep } from "./types";
+
+interface Transcription {
+  steps: InstructionStep[];
+}
 
 function App() {
   const [videoUrl, setVideoUrl] = useState("");
   const [showForm, setShowForm] = useState(true);
   const [loadingVideo, setLoadingVideo] = useState(false);
-  const [transcription, setTranscription] = useState("");
+  const [transcription, setTranscription] = useState<Transcription | null>(
+    null
+  );
+
   const [isTranscriptLoading, setIsTranscriptLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState(0);
 
   const handleVideoSubmit = (url: string) => {
     setVideoUrl(url);
@@ -31,7 +46,14 @@ function App() {
   const handleNewVideo = () => {
     setVideoUrl("");
     setShowForm(true);
-    setTranscription("");
+    setTranscription(null);
+  };
+
+  const handleNextStep = () => {
+    setActiveTab(
+      (prevActiveTab) =>
+        (prevActiveTab + 1) % (transcription?.steps.length || 1)
+    );
   };
 
   return (
@@ -89,7 +111,30 @@ function App() {
           )}
           {transcription && (
             <Flex margin={8}>
-              <Text>{transcription}</Text>
+              <Tabs
+                index={activeTab}
+                onChange={(index) => setActiveTab(index)}
+                isLazy
+              >
+                <TabList display="none">
+                  {transcription.steps.map((step, index) => (
+                    <Tab key={`tab-${index}`}>{step.instruction}</Tab>
+                  ))}
+                </TabList>
+                <TabPanels>
+                  {transcription.steps.map((step, index) => (
+                    <TabPanel key={`tabpanel-${index}`}>
+                      <Text>
+                        {step.order}. {step.instruction} (starts at{" "}
+                        {step.timestamp})
+                      </Text>
+                    </TabPanel>
+                  ))}
+                </TabPanels>
+              </Tabs>
+              <Button mt={4} onClick={handleNextStep}>
+                Next Step
+              </Button>
             </Flex>
           )}
         </>

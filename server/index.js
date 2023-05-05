@@ -14,12 +14,9 @@ require("dotenv").config();
 app.use(cors());
 app.use(express.json()); // Add this line to parse JSON request body
 
-const audioFilePath = "./resources/audio.mp3";
-
 app.post("/process-link", async (req, res) => {
   const link = req.body.link;
   console.log("link received:", link);
-
   await downloadYouTubeAudio(link);
 
   try {
@@ -31,7 +28,7 @@ app.post("/process-link", async (req, res) => {
     console.log("OpenAI transcription data:", openaiTranscriptionData);
 
     const generatedText = await generateInstructions();
-    //res.send(generatedText);
+    res.send(generatedText);
   } catch (err) {
     console.error("Error transcribing audio or video:", err);
     res
@@ -47,13 +44,3 @@ app.get("/", (req, res) => {
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
 });
-
-/*(async () => {
-    try {
-      const openaiTranscriptionData = await openAITranscribe(audioFilePath);
-      console.log(openaiTranscriptionData);
-    } catch (err) {
-      console.error('Error transcribing video with OpenAI:', err);
-    }
-  })();
-*/

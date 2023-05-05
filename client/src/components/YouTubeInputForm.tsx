@@ -12,10 +12,11 @@ import {
 } from "@chakra-ui/react";
 import styles from "./YouTubeInputForm.module.css";
 import axios from "axios";
+import { Transcription } from "../types";
 
 interface YouTubeInputFormProps {
   onVideoSubmit: (videoUrl: string) => void;
-  onTranscriptionReceived: (transcription: string) => void;
+  onTranscriptionReceived: (transcription: Transcription | null) => void;
   setLoading: (loading: boolean) => void;
 }
 
